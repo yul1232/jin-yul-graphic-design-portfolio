@@ -1,0 +1,82 @@
+/* 프로젝트 탐색 / 상세 화면의 왼쪽 위 내비게이션 공통 규칙 */
+.page-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 6;
+  margin: 0;
+  padding: 36px clamp(24px, 5vw, 80px);
+}
+.page-nav-link {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  text-shadow: none;
+  filter: none;
+  background: transparent;
+  color: #F5F5F5;
+  font-family: Arial, 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0;
+  text-align: left;
+  text-decoration: none;
+  text-decoration-color: #F5F5F5;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.page-nav-link:hover,
+.page-nav-link:active,
+.page-nav-link:focus {
+  color: #F5F5F5;
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  text-decoration-line: none;
+}
+.page-nav-link:focus-visible {
+  outline: none;
+  text-decoration-line: none;
+  text-shadow: none;
+  background: transparent;
+}
+.page-nav-link,
+#start {
+  text-decoration-line: none;
+  text-decoration-color: #F5F5F5;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+  text-decoration-skip-ink: none;
+}
+#start { text-decoration-thickness: 3px; }
+:is(#back, #home) { position: relative; display: inline-flex; align-items: center; gap: .28em; }
+:is(#back, #home) .back-icon { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 14px; height: 14px; line-height: 1; }
+:is(#back, #home) .back-icon svg { display: block; }
+/* 한 줄의 가상 요소로 그려서 아이콘/텍스트 경계에서 밑줄이 끊기지 않습니다. */
+:is(#back, #home)::after { content: ''; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; background: #F5F5F5; opacity: 0; pointer-events: none; }
+:is(#back, #home):hover, :is(#back, #home):focus, :is(#back, #home):focus-visible, :is(#back, #home):active { text-decoration-line: none; }
+@media (hover: hover) and (pointer: fine) {
+  .page-nav-link:hover:not(:active),
+  #start:hover:not(:active) { text-decoration-line: underline; }
+  :is(#back, #home):hover:not(:active) { text-decoration-line: none; }
+  :is(#back, #home):hover:not(:active)::after { opacity: 1; }
+}
+.page-leaving :is(#back, #home)::after, :is(#back, #home):active::after { opacity: 0; }
+.page-leaving .page-nav-link,
+.page-leaving #start,
+#start:active {
+  text-decoration-line: none;
+  text-shadow: none;
+}
+@media (max-width: 760px) {
+  .page-nav { padding: 26px 6%; }
+}

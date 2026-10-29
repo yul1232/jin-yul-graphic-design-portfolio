@@ -1,0 +1,22 @@
+const assert = require('node:assert/strict');
+const Physics = require('./title-physics.js');
+const points = Array.from({ length: 4000 }, (_, i) => [50 + i % 100 * 2, 30 + Math.floor(i / 100) * 2]);
+const elastic = new Physics([[0, 0]]); elastic.points[0].x = 10;
+let crossedHome = false;
+for (let i = 0; i < 120; i++) { elastic.step(1 / 60, null, null, 40); if (elastic.points[0].x < 0) crossedHome = true; }
+assert.ok(crossedHome, 'The spring overshoots gently before settling');
+const spring = new Physics(points);
+for (let i = 0; i < 90; i++) spring.step(1 / 60, { active: true, x: 150, y: 70 }, null, 40);
+assert.ok(spring.points.some(p => Math.hypot(p.x - p.homeX, p.y - p.homeY) > 15));
+for (let i = 0; i < 600; i++) spring.step(1 / 60, { active: false }, null, 40);
+assert.ok(spring.points.every(p => p.x === p.homeX && p.y === p.homeY), 'Particles settle exactly at their homes');
+spring.burst(150, 70);
+for (let i = 0; i < 30; i++) spring.step(1 / 60, null, null, 40);
+assert.ok(spring.points.some(p => Math.hypot(p.x - p.homeX, p.y - p.homeY) > 1));
+for (let i = 0; i < 600; i++) spring.step(1 / 60, null, null, 40);
+assert.ok(spring.points.every(p => p.x === p.homeX && p.y === p.homeY));
+for (let i = 0; i < 120; i++) spring.step(1 / 60, null, { x: 150, y: 70 }, 40);
+const idleMax = Math.max(...spring.points.map(p => Math.hypot(p.x - p.homeX, p.y - p.homeY)));
+assert.ok(idleMax > 0 && idleMax < 1, 'Idle effect stays below one pixel');
+assert.ok(spring.points.every(p => Number.isFinite(p.x) && Number.isFinite(p.y)));
+console.log('PASS: 4000 particles, pointer repulsion, exact spring return, expanding shockwave, subpixel idle motion and finite physics');

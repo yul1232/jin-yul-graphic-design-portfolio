@@ -1,0 +1,211 @@
+[
+  {
+    "canvasFit": true,
+    "color": "rgb(255, 230, 0)",
+    "font": "136.8px",
+    "glyphsFit": true,
+    "horizontalOverflow": false,
+    "noOverlap": true,
+    "particleCount": "14000",
+    "size": [
+      1440,
+      900
+    ],
+    "startSize": [
+      120,
+      63.171875
+    ],
+    "titleHeight": 273.59375,
+    "verticalScroll": false
+  },
+  {
+    "canvasFit": true,
+    "color": "rgb(255, 230, 0)",
+    "font": "121.6px",
+    "glyphsFit": true,
+    "horizontalOverflow": false,
+    "noOverlap": true,
+    "particleCount": "14010",
+    "size": [
+      1280,
+      720
+    ],
+    "startSize": [
+      120,
+      58.8125
+    ],
+    "titleHeight": 243.1875,
+    "verticalScroll": false
+  },
+  {
+    "canvasFit": true,
+    "color": "rgb(255, 230, 0)",
+    "font": "97.28px",
+    "glyphsFit": true,
+    "horizontalOverflow": false,
+    "noOverlap": true,
+    "particleCount": "13911",
+    "size": [
+      1024,
+      600
+    ],
+    "startSize": [
+      120,
+      52.796875
+    ],
+    "titleHeight": 194.5625,
+    "verticalScroll": false
+  },
+  {
+    "canvasFit": true,
+    "color": "rgb(255, 230, 0)",
+    "font": "136px",
+    "glyphsFit": true,
+    "horizontalOverflow": false,
+    "noOverlap": true,
+    "particleCount": "13862",
+    "size": [
+      1023,
+      768
+    ],
+    "startSize": [
+      120,
+      59.1875
+    ],
+    "titleHeight": 408,
+    "verticalScroll": false
+  },
+  {
+    "canvasFit": true,
+    "color": "rgb(255, 230, 0)",
+    "font": "129.27px",
+    "glyphsFit": true,
+    "horizontalOverflow": false,
+    "noOverlap": true,
+    "particleCount": "13865",
+    "size": [
+      834,
+      1112
+    ],
+    "startSize": [
+      120,
+      59.1875
+    ],
+    "titleHeight": 387.796875,
+    "verticalScroll": false
+  },
+  {
+    "canvasFit": true,
+    "color": "rgb(255, 230, 0)",
+    "font": "119.04px",
+    "glyphsFit": true,
+    "horizontalOverflow": false,
+    "noOverlap": true,
+    "particleCount": "14096",
+    "size": [
+      768,
+      1024
+    ],
+    "startSize": [
+      120,
+      59.1875
+    ],
+    "titleHeight": 357.140625,
+    "verticalScroll": false
+  },
+  {
+    "canvasFit": true,
+    "color": "rgb(255, 230, 0)",
+    "font": "112px",
+    "glyphsFit": true,
+    "horizontalOverflow": false,
+    "noOverlap": true,
+    "particleCount": "13957",
+    "size": [
+      767,
+      900
+    ],
+    "startSize": [
+      132,
+      56
+    ],
+    "titleHeight": 336,
+    "verticalScroll": false
+  },
+  {
+    "canvasFit": true,
+    "color": "rgb(255, 230, 0)",
+    "font": "60.45px",
+    "glyphsFit": true,
+    "horizontalOverflow": false,
+    "noOverlap": true,
+    "particleCount": "9596",
+    "size": [
+      390,
+      844
+    ],
+    "startSize": [
+      132,
+      56
+    ],
+    "titleHeight": 181.359375,
+    "verticalScroll": false
+  },
+  {
+    "canvasFit": true,
+    "color": "rgb(255, 230, 0)",
+    "font": "49.6px",
+    "glyphsFit": true,
+    "horizontalOverflow": false,
+    "noOverlap": true,
+    "particleCount": "9559",
+    "size": [
+      320,
+      568
+    ],
+    "startSize": [
+      132,
+      56
+    ],
+    "titleHeight": 148.78125,
+    "verticalScroll": false
+  },
+  {
+    "canvasFit": true,
+    "color": "rgb(255, 230, 0)",
+    "font": "103.385px",
+    "glyphsFit": true,
+    "horizontalOverflow": false,
+    "noOverlap": true,
+    "particleCount": "13997",
+    "size": [
+      667,
+      375
+    ],
+    "startSize": [
+      132,
+      56
+    ],
+    "titleHeight": 310.171875,
+    "verticalScroll": true
+  },
+  {
+    "canvasFit": true,
+    "color": "rgb(255, 230, 0)",
+    "font": "129.77px",
+    "glyphsFit": true,
+    "horizontalOverflow": false,
+    "noOverlap": true,
+    "particleCount": "13960",
+    "size": [
+      1366,
+      500
+    ],
+    "startSize": [
+      120,
+      61.140625
+    ],
+    "titleHeight": 259.53125,
+    "verticalScroll": true
+  }
+]

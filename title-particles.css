@@ -1,0 +1,4 @@
+.cover-title { user-select: none; -webkit-user-select: none; }
+.title-particle-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+.cover-title.particles-ready .title-ink { opacity: 0; }
+/* DOM 제목의 글꼴·간격·너비·높이는 그대로 보존하며 읽기 접근성도 유지합니다. */
