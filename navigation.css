@@ -1,11 +1,12 @@
 /* 프로젝트 탐색 / 상세 화면의 왼쪽 위 내비게이션 공통 규칙 */
+:root { --page-nav-top: 36px; }
 .page-nav {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 6;
   margin: 0;
-  padding: 36px clamp(24px, 5vw, 80px);
+  padding: var(--page-nav-top) clamp(24px, 5vw, 80px);
 }
 .page-nav-link {
   display: inline-block;
@@ -78,5 +79,6 @@
   text-shadow: none;
 }
 @media (max-width: 760px) {
-  .page-nav { padding: 26px 6%; }
+  :root { --page-nav-top: 26px; }
+  .page-nav { padding: var(--page-nav-top) 6%; }
 }

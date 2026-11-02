@@ -4,7 +4,8 @@
   cursor: pointer; text-decoration: none; text-decoration-thickness: 2px; text-underline-offset: 5px;
   -webkit-tap-highlight-color: transparent;
 }
-.making-trigger { position: absolute; top: 4px; right: clamp(20px, 3.2vw, 60px); z-index: 3; min-height: 44px; }
+.making-trigger { position: absolute; top: var(--page-nav-top); right: clamp(20px, 3.2vw, 60px); z-index: 3; min-height: 0; }
+.making-trigger::before { content: ''; position: absolute; inset: -11px 0; }
 .making-trigger:hover, .making-close:hover, .making-trigger:focus-visible, .making-close:focus-visible { outline: none; text-decoration-line: underline; }
 .making-dialog {
   width: min(760px, calc(100% - 32px)); max-height: calc(100svh - 40px);
