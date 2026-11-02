@@ -21,7 +21,7 @@
   }
   function schedule() { if (!frame) frame = requestAnimationFrame(tick); }
   window.addEventListener('pointermove', event => {
-    if (event.pointerType !== 'mouse' || motion.matches) return;
+    if (event.pointerType !== 'mouse' || motion.matches || document.querySelector('#making-dialog[open]')) return;
     // 화면 끝에서도 기존 5% 여유 영역 안에서만 작게 이동합니다.
     const limitX = Math.min(14, innerWidth * .025);
     const limitY = Math.min(14, innerHeight * .025);

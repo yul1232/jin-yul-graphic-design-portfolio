@@ -14,7 +14,7 @@
   let color = '#F5F5F5', dotRadius = .7, influence = 32, bounds, dpr = 1;
   const pointer = { active: false, x: 0, y: 0 };
   let resumeIdleAt = 0;
-  function visible() { return !document.hidden && !cover.hidden && !cover.classList.contains('page-leaving'); }
+  function visible() { return !document.hidden && !cover.hidden && !cover.classList.contains('page-leaving') && !document.querySelector('#making-dialog[open]'); }
   function draw() {
     context.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
     context.fillStyle = color;
@@ -105,6 +105,7 @@
   window.addEventListener('resize', queueBuild);
   cover.addEventListener('scroll', queueBuild, { passive: true });
   document.addEventListener('visibilitychange', schedule);
+  document.addEventListener('portfolio:modalchange', schedule);
   new MutationObserver(() => { if (visible()) queueBuild(); }).observe(cover, { attributes: true, attributeFilter: ['hidden', 'class'] });
   reduced.addEventListener('change', queueBuild);
   document.fonts.ready.then(queueBuild);
