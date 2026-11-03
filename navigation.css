@@ -82,3 +82,10 @@
   :root { --page-nav-top: 26px; }
   .page-nav { padding: var(--page-nav-top) 6%; }
 }
+/* 터치에서는 누르는 동안만 표시하고, 손을 떼면 기본 상태로 복귀합니다. */
+@media (hover: none), (pointer: coarse) {
+  #start:active { text-decoration-line: underline; }
+  :is(#back, #home):active::after { opacity: 1; }
+  .page-leaving #start { text-decoration-line: none; }
+  .page-leaving :is(#back, #home)::after { opacity: 0; }
+}
