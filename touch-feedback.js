@@ -1,6 +1,6 @@
 // 모바일 브라우저의 :active 처리와 관계없이 터치 중인 상태를 표시합니다.
 (() => {
-  const selector = '#start, #home, #back';
+  const selector = '#start, #home, #back, #making-open';
   let pressed = null;
   let originX = 0;
   let originY = 0;

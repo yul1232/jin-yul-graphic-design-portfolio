@@ -82,14 +82,39 @@
   :root { --page-nav-top: 26px; }
   .page-nav { padding: var(--page-nav-top) 6%; }
 }
-/* 터치에서는 누르는 동안만 표시하고, 손을 떼면 기본 상태로 복귀합니다. */
+/* 모바일의 네 버튼은 같은 터치 상태와 흰색 밑줄 규칙을 공유합니다. */
 @media (hover: none), (pointer: coarse) {
-  #start:active { text-decoration-line: underline; }
-  :is(#back, #home):active::after { opacity: 1; }
-  .page-leaving #start { text-decoration-line: none; }
-  .page-leaving :is(#back, #home)::after { opacity: 0; }
+  :is(#start, #home, #back, #making-open) {
+    color: #F5F5F5;
+    text-decoration-color: #F5F5F5;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+    text-decoration-skip-ink: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  :is(#start, #making-open):hover { text-decoration-line: none; }
+  :is(#start, #making-open):is(.is-touch-pressed, :focus-visible) {
+    text-decoration-line: underline;
+  }
+  :is(#back, #home):is(.is-touch-pressed, :focus-visible)::after {
+    opacity: 1;
+    height: 2px;
+    background: #F5F5F5;
+  }
 }
-#start.is-touch-pressed { text-decoration-line: underline; }
+/* 실제 터치 입력은 화면 폭이나 연결된 마우스 유무와 관계없이 반응합니다. */
+:is(#start, #making-open).is-touch-pressed {
+  color: #F5F5F5;
+  text-decoration-line: underline;
+  text-decoration-color: #F5F5F5;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
 :is(#back, #home).is-touch-pressed::after { opacity: 1; }
-.page-leaving #start.is-touch-pressed { text-decoration-line: none; }
-.page-leaving :is(#back, #home).is-touch-pressed::after { opacity: 0; }
+.page-leaving :is(#start, #making-open) { text-decoration-line: none; }
+.page-leaving :is(#back, #home)::after { opacity: 0; }
+/* START의 기존 밑줄 두께는 터치 상태에서도 유지합니다. */
+#start,
+#start.is-touch-pressed { text-decoration-thickness: 3px; }
