@@ -78,3 +78,12 @@
 }
 .page-leaving :is(#start, #making-open) { text-decoration-line: none; }
 .page-leaving :is(#back, #home)::after { opacity: 0; }
+/* 제작 과정 버튼과 같은 흰색을 모든 링크 상태에 명시합니다. */
+:is(#home, #back),
+:is(#home, #back):is(:link, :visited, :hover, :active, :focus, :focus-visible) {
+  color: #F5F5F5;
+  -webkit-text-fill-color: #F5F5F5;
+  text-decoration-color: #F5F5F5;
+}
+:is(#home, #back) .back-label,
+:is(#home, #back) .back-icon { color: inherit; }
