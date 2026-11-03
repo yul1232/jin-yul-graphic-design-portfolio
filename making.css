@@ -6,7 +6,7 @@
 }
 .making-trigger { position: absolute; top: var(--page-nav-top); right: clamp(20px, 3.2vw, 60px); z-index: 3; min-height: 0; }
 .making-trigger::before { content: ''; position: absolute; inset: -11px 0; }
-.making-close:hover, .making-close:focus-visible { outline: none; text-decoration-line: underline; }
+.making-trigger:hover, .making-close:hover, .making-trigger:focus-visible, .making-close:focus-visible { outline: none; text-decoration-line: underline; }
 .making-dialog {
   width: min(760px, calc(100% - 32px)); max-height: calc(100svh - 40px);
   padding: 0; margin: auto; border: 1px solid #F5F5F530;
