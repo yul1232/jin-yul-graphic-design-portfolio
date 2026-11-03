@@ -89,3 +89,7 @@
   .page-leaving #start { text-decoration-line: none; }
   .page-leaving :is(#back, #home)::after { opacity: 0; }
 }
+#start.is-touch-pressed { text-decoration-line: underline; }
+:is(#back, #home).is-touch-pressed::after { opacity: 1; }
+.page-leaving #start.is-touch-pressed { text-decoration-line: none; }
+.page-leaving :is(#back, #home).is-touch-pressed::after { opacity: 0; }
