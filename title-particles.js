@@ -13,6 +13,7 @@
   let simulation = null, frame = 0, buildFrame = 0, lastTime = 0, clock = 0;
   let color = '#F5F5F5', dotRadius = .7, influence = 32, bounds, dpr = 1;
   const pointer = { active: false, x: 0, y: 0 };
+  let touchPointerId = null;
   let resumeIdleAt = 0;
   function visible() { return !document.hidden && !cover.hidden && !cover.classList.contains('page-leaving') && !document.querySelector('#making-dialog[open]'); }
   function draw() {
@@ -86,21 +87,39 @@
     title.classList.add('particles-ready'); draw(); schedule();
   }
   function queueBuild() { cancelAnimationFrame(buildFrame); buildFrame = requestAnimationFrame(build); }
-  window.addEventListener('pointermove', event => {
-    if (reduced.matches || !visible() || event.pointerType === 'touch') return;
+  function trackPointer(event) {
     bounds = title.getBoundingClientRect();
     const active = event.clientX >= bounds.left && event.clientX <= bounds.right && event.clientY >= bounds.top && event.clientY <= bounds.bottom;
     if (pointer.active && !active) resumeIdleAt = performance.now() + 2600;
     pointer.active = active; pointer.x = event.clientX; pointer.y = event.clientY;
     schedule();
+  }
+  window.addEventListener('pointermove', event => {
+    if (reduced.matches || !visible()) return;
+    if (event.pointerType === 'touch' && event.pointerId !== touchPointerId) return;
+    if (event.pointerType !== 'touch' && touchPointerId !== null) return;
+    trackPointer(event);
   }, { passive: true });
-  function leave() { pointer.active = false; resumeIdleAt = performance.now() + 2600; schedule(); }
+  function leave() { touchPointerId = null; pointer.active = false; resumeIdleAt = performance.now() + 2600; schedule(); }
   document.documentElement.addEventListener('pointerleave', leave);
   window.addEventListener('blur', leave);
   title.addEventListener('pointerdown', event => {
     if (event.button !== 0 || reduced.matches || !simulation || !visible()) return;
+    if (event.pointerType === 'touch') {
+      if (touchPointerId !== null) return;
+      touchPointerId = event.pointerId;
+      title.setPointerCapture(event.pointerId);
+      trackPointer(event);
+    }
     simulation.burst(event.clientX, event.clientY); resumeIdleAt = performance.now() + 2600; schedule();
   });
+  function endTouch(event) {
+    if (event.pointerId !== touchPointerId) return;
+    leave();
+  }
+  window.addEventListener('pointerup', endTouch);
+  window.addEventListener('pointercancel', endTouch);
+  title.addEventListener('lostpointercapture', endTouch);
   document.addEventListener('portfolio:title-layout', queueBuild);
   window.addEventListener('resize', queueBuild);
   cover.addEventListener('scroll', queueBuild, { passive: true });
