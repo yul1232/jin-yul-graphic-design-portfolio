@@ -34,87 +34,44 @@
   user-select: none;
   -webkit-user-select: none;
 }
-.page-nav-link:hover,
-.page-nav-link:active,
-.page-nav-link:focus {
+/* 네 버튼의 표시 조건은 이 공통 상태 규칙 한 곳에서 관리합니다. */
+:is(#start, #home, #back, #making-open) {
+  --button-line: none;
+  --button-line-opacity: 0;
   color: #F5F5F5;
-  border: 0;
-  outline: none;
-  box-shadow: none;
-  background: transparent;
-  text-decoration-line: none;
-}
-.page-nav-link:focus-visible {
-  outline: none;
-  text-decoration-line: none;
-  text-shadow: none;
-  background: transparent;
-}
-.page-nav-link,
-#start {
-  text-decoration-line: none;
+  text-decoration-line: var(--button-line);
   text-decoration-color: #F5F5F5;
   text-decoration-thickness: 2px;
   text-underline-offset: 5px;
   text-decoration-skip-ink: none;
+  text-shadow: none;
+  box-shadow: none;
+  background: transparent;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
 }
 #start { text-decoration-thickness: 3px; }
-:is(#back, #home) { position: relative; display: inline-flex; align-items: center; gap: .28em; }
+:is(#back, #home) { position: relative; display: inline-flex; align-items: center; gap: .28em; text-decoration-line: none; }
 :is(#back, #home) .back-icon { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 14px; height: 14px; line-height: 1; }
 :is(#back, #home) .back-icon svg { display: block; }
-/* 한 줄의 가상 요소로 그려서 아이콘/텍스트 경계에서 밑줄이 끊기지 않습니다. */
-:is(#back, #home)::after { content: ''; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; background: #F5F5F5; opacity: 0; pointer-events: none; }
-:is(#back, #home):hover, :is(#back, #home):focus, :is(#back, #home):focus-visible, :is(#back, #home):active { text-decoration-line: none; }
+:is(#back, #home)::after { content: ''; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; background: #F5F5F5; opacity: var(--button-line-opacity); pointer-events: none; }
 @media (hover: hover) and (pointer: fine) {
-  .page-nav-link:hover:not(:active),
-  #start:hover:not(:active) { text-decoration-line: underline; }
-  :is(#back, #home):hover:not(:active) { text-decoration-line: none; }
-  :is(#back, #home):hover:not(:active)::after { opacity: 1; }
+  :is(#start, #home, #back, #making-open):hover {
+    --button-line: underline;
+    --button-line-opacity: 1;
+  }
 }
-.page-leaving :is(#back, #home)::after, :is(#back, #home):active::after { opacity: 0; }
-.page-leaving .page-nav-link,
-.page-leaving #start,
-#start:active {
-  text-decoration-line: none;
-  text-shadow: none;
+:is(#start, #home, #back, #making-open):is(.is-touch-pressed, :focus-visible) {
+  --button-line: underline;
+  --button-line-opacity: 1;
+  outline: none;
+}
+.page-leaving :is(#start, #home, #back, #making-open) {
+  --button-line: none;
+  --button-line-opacity: 0;
 }
 @media (max-width: 760px) {
   :root { --page-nav-top: 26px; }
   .page-nav { padding: var(--page-nav-top) 6%; }
 }
-/* 모바일의 네 버튼은 같은 터치 상태와 흰색 밑줄 규칙을 공유합니다. */
-@media (hover: none), (pointer: coarse) {
-  :is(#start, #home, #back, #making-open) {
-    color: #F5F5F5;
-    text-decoration-color: #F5F5F5;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 5px;
-    text-decoration-skip-ink: none;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-user-select: none;
-    user-select: none;
-  }
-  :is(#start, #making-open):hover { text-decoration-line: none; }
-  :is(#start, #making-open):is(.is-touch-pressed, :focus-visible) {
-    text-decoration-line: underline;
-  }
-  :is(#back, #home):is(.is-touch-pressed, :focus-visible)::after {
-    opacity: 1;
-    height: 2px;
-    background: #F5F5F5;
-  }
-}
-/* 실제 터치 입력은 화면 폭이나 연결된 마우스 유무와 관계없이 반응합니다. */
-:is(#start, #making-open).is-touch-pressed {
-  color: #F5F5F5;
-  text-decoration-line: underline;
-  text-decoration-color: #F5F5F5;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 5px;
-}
-:is(#back, #home).is-touch-pressed::after { opacity: 1; }
-.page-leaving :is(#start, #making-open) { text-decoration-line: none; }
-.page-leaving :is(#back, #home)::after { opacity: 0; }
-/* START의 기존 밑줄 두께는 터치 상태에서도 유지합니다. */
-#start,
-#start.is-touch-pressed { text-decoration-thickness: 3px; }
