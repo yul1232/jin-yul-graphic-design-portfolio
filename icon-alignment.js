@@ -12,6 +12,12 @@
     return { label, symbol, baseline };
   }).filter(Boolean);
   function align() {
+    // 2px 선이 기기 픽셀 중간에 걸려 회색으로 흐려지지 않도록 맞춥니다.
+    document.querySelectorAll('#home, #back').forEach(button => {
+      const ratio = window.devicePixelRatio || 1;
+      const lineTop = button.getBoundingClientRect().bottom + 1;
+      button.style.setProperty('--underline-pixel-offset', `${Math.round(lineTop * ratio) / ratio - lineTop}px`);
+    });
     entries.forEach(({ label, symbol, baseline }) => {
       const style = getComputedStyle(label);
       context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;

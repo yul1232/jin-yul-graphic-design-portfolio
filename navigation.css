@@ -87,3 +87,17 @@
 }
 :is(#home, #back) .back-label,
 :is(#home, #back) .back-icon { color: inherit; }
+/* 모바일 밑줄은 반투명도가 아닌 표시 여부로 제어합니다. */
+@media (hover: none), (pointer: coarse) {
+  :is(#home, #back)::after {
+    background: #F5F5F5;
+    opacity: 1;
+    visibility: hidden;
+    transform: translateY(var(--underline-pixel-offset, 0px));
+  }
+  :is(#home, #back):is(:hover, :focus-visible, .is-touch-pressed)::after {
+    opacity: 1;
+    visibility: visible;
+  }
+  .page-leaving :is(#home, #back)::after { visibility: hidden; }
+}
