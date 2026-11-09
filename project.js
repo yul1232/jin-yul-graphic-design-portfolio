@@ -14,16 +14,24 @@
     const tool = catalog[key];
     const item = document.createElement('span');
     item.setAttribute('role', 'listitem');
-    const logo = document.createElement('img');
-    logo.alt = tool.name; logo.width = 26; logo.height = 26;
     if (tool.mark) {
-      logo.addEventListener('error', () => {
-        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x=".75" y=".75" width="24.5" height="24.5" stroke="#F5F5F5" stroke-width="1.5"/><text x="${tool.markX}" y="18.2" fill="#F5F5F5" font-family="Arial, sans-serif" font-size="15" font-weight="600" letter-spacing="-.65">${tool.mark}</text></svg>`;
-        logo.src = `data:image/svg+xml,${encodeURIComponent(svg)}`;
-      }, { once: true });
+      item.innerHTML = `<svg width="26" height="26" viewBox="0 0 26 26" fill="none" role="img">
+        <rect x=".75" y=".75" width="24.5" height="24.5" stroke="#F5F5F5" stroke-width="1.5"/>
+        <text y="18.2" fill="#F5F5F5" font-family="Arial, sans-serif" font-size="15" font-weight="600" letter-spacing="-.65"></text>
+      </svg>`;
+      item.firstElementChild.setAttribute('aria-label', tool.name);
+      const label = item.querySelector('text');
+      label.setAttribute('x', tool.markX);
+      label.textContent = tool.mark;
+    } else {
+      const logo = document.createElement('img');
+      logo.alt = tool.name;
+      logo.width = 26;
+      logo.height = 26;
+      logo.src = tool.logo;
+      item.append(logo);
     }
-    logo.src = tool.logo;
-    item.append(logo); toolsList.append(item);
+    toolsList.append(item);
   });
   toolsSection.hidden = tools.length === 0;
   const button=document.querySelector('#intro-button'),intro=document.querySelector('#intro');button.addEventListener('click',()=>{const open=button.getAttribute('aria-expanded')!=='true';button.setAttribute('aria-expanded',String(open));document.querySelector('#sign').textContent=open?'−':'+';intro.inert=!open;intro.classList.toggle('open',open);});
