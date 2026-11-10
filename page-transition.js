@@ -5,6 +5,7 @@
   if (!surface) return;
   const home = surface.dataset.pageSurface === 'home';
   let activeFrame = null, inputFrame = null, busy = false;
+  let wheelFrame = 0, wheelDelta = 0;
   window.projectTransitionBusy = false;
   const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
   const duration = () => Number(window.coverData?.transitionMs) || 1000;
@@ -35,8 +36,6 @@
     const onEnd = event => { if (event.target === outgoing && event.propertyName === 'opacity') complete(); };
     if (reduced()) { complete(); return; }
     outgoing.addEventListener('transitionend', onEnd);
-    // Force the outgoing layer's visible state to be committed before changing opacity.
-    outgoing.getBoundingClientRect();
     outgoing.classList.add('page-leaving'); timer = setTimeout(complete, ms + 80);
   }
   function navigate(url) {
@@ -81,7 +80,13 @@
     if (event.data?.type === 'portfolio:wheel' && event.source === parent && surface.dataset.pageSurface === 'detail') {
       const unit = event.data.deltaMode === 1 ? 16 : event.data.deltaMode === 2 ? innerHeight : 1;
       const top = Number(event.data.deltaY) * unit;
-      if (Number.isFinite(top)) window.scrollBy({ top, left: 0, behavior: 'instant' });
+      if (!Number.isFinite(top)) return;
+      wheelDelta += top;
+      if (!wheelFrame) wheelFrame = requestAnimationFrame(() => {
+        const delta = wheelDelta;
+        wheelDelta = 0; wheelFrame = 0;
+        window.scrollBy({ top: delta, left: 0, behavior: 'instant' });
+      });
       return;
     }
     if (event.data?.type === 'portfolio:shown' && event.source === parent) { setBusy(false); focusPage(); return; }
