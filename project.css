@@ -10,7 +10,23 @@ body { overflow: visible; touch-action: pan-y; }
 #intro-button[aria-expanded="true"] #sign::after { display: none; }
 #intro-button { min-height: 20px; }
 .used-tools { margin-top: 36px; text-align: left; }
-.used-tools h2 { margin: 0 0 16px; padding: 0; color: #F5F5F5; font-family: inherit; font-size: 14px; font-weight: 400; line-height: normal; letter-spacing: normal; }
-.tool-logos { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.used-tools:not([hidden]) { display: flex; align-items: center; gap: 16px; }
+.used-tools h2 { flex: none; margin: 0; padding: 0; color: #F5F5F5; font-family: inherit; font-size: 14px; font-weight: 400; line-height: normal; letter-spacing: normal; }
+.tool-logos:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
 .tool-logos > span, .tool-logos img { display: block; width: 26px; height: 26px; flex: none; }
 #title { color: #F5F5F5; }
+#cover.has-image { aspect-ratio: auto; background: transparent; }
+#cover.has-image img { height: auto; }
+#cover.has-image:has(> img[src="assets/kaguya-poster-preview.png"]) {
+  justify-self: center;
+  width: min(100%, 78vw, 52svh, 480px);
+}
+#cover.has-image:has(> img[src="assets/seorin-logo.png"]) {
+  position: relative;
+  aspect-ratio: 3 / 2;
+}
+#cover.has-image > img[src="assets/seorin-logo.png"] {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}

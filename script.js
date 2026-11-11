@@ -10,21 +10,105 @@
   function resetWheel(){wheelGesture={time:-Infinity,direction:0,total:0,fired:false,amplitude:0};}resetWheel();
   const activeIndex=()=>!animation&&!cardPress?.moved&&Math.abs(position-Math.round(position))<.0001?Math.round(position):-1;
   const cards=projects.map((project,index)=>{
-    const card=document.createElement('figure');card.className='card';card.draggable=false;card.setAttribute('role','group');card.setAttribute('aria-roledescription','슬라이드');card.setAttribute('aria-label',`${index+1} / ${projects.length}${project.title?`: ${project.title}`:': 빈 작품 영역'}`);card.dataset.projectId=project.id;
-    if(project.thumbnail){const img=new Image();img.alt=project.title||'';img.draggable=false;img.decoding='async';img.src=project.thumbnail;img.addEventListener('error',()=>img.remove(),{once:true});card.append(img);}container.append(card);return card;
+    const card=document.createElement('figure');card.className='card';card.draggable=false;card.setAttribute('role','group');card.setAttribute('aria-roledescription','슬라이드');card.setAttribute('aria-label',`${index+1} / ${projects.length}${project.title?`: ${project.title}`:project.thumbnail?': 작품 이미지':': 빈 작품 영역'}`);card.dataset.projectId=project.id;
+    if (project.thumbnail) {
+      const img = new Image();
+      img.alt = project.title || '';
+      img.draggable = false;
+      img.decoding = 'async';
+      if (index === position) img.fetchPriority = 'high';
+      img.addEventListener('load', async () => {
+        await img.decode().catch(() => {});
+        img.classList.add('is-ready');
+      }, { once: true });
+      img.addEventListener('error', () => img.remove(), { once: true });
+      img.src = project.thumbnail;
+      card.append(img);
+    }
+    container.append(card);
+    return card;
   });
+  const gatsbyIndex = projects.findIndex(project => project.id === 'project-3');
+  const kaguyaIndex = projects.findIndex(project => project.id === 'project-4');
+  const depthStep = 650;
+  const perspective = 1100;
+  const sideScale = perspective / (perspective + depthStep);
+  const cardSpacing = () => width * (width <= 600 ? .72 : width <= 900 ? .56 : .47);
+  let extraPosterGap = 0;
+
+  function measurePosterGap() {
+    if (gatsbyIndex < 0 || kaguyaIndex !== gatsbyIndex + 1) return;
+    const gatsbyHalf = cards[gatsbyIndex].offsetWidth / 2;
+    const kaguyaHalf = cards[kaguyaIndex].offsetWidth / 2;
+    const gutter = 8;
+    const required = Math.max(
+      (gatsbyHalf + gutter) / sideScale + kaguyaHalf,
+      (kaguyaHalf + gutter) / sideScale + gatsbyHalf,
+    );
+    extraPosterGap = Math.max(0, required - cardSpacing());
+  }
+
   document.querySelector('#total').textContent=pad(projects.length);
   function render(){
-    const spacing=width*(width<=600?.72:width<=900?.56:.47);
-    cards.forEach((card,i)=>{const distance=i-position,magnitude=Math.abs(distance);card.style.transform=`translate(-50%, -50%) translate3d(${distance*spacing}px, 0, ${-650*magnitude}px)`;card.style.opacity=String(Math.max(0,1-.71*magnitude));card.style.visibility=magnitude>=1.41?'hidden':'visible';card.setAttribute('aria-hidden',String(i!==Math.round(position)));const active=i===activeIndex();card.classList.toggle('is-active',active);card.dataset.active=String(active);});
+    const spacing = cardSpacing();
+    const crossing = Math.max(0, Math.min(1, position - gatsbyIndex));
+    const centered = Math.round(position);
+    const activeCard = activeIndex();
+    cards.forEach((card, i) => {
+      const distance = i - position;
+      const magnitude = Math.abs(distance);
+      // Keep the current and adjacent cards unchanged, with a longer fade beyond them.
+      const opacity = magnitude <= 1
+        ? 1 - .71 * magnitude
+        : .29 * Math.pow(Math.max(0, 2 - magnitude), .71 / .29);
+      const visibility = opacity === 0 ? 'hidden' : 'visible';
+      if (card.style.visibility !== visibility) card.style.visibility = visibility;
+      if (opacity > 0) {
+        const posterOffset = extraPosterGap * (Number(i >= kaguyaIndex) - crossing);
+        card.style.transform = `translate(-50%, -50%) translate3d(${distance * spacing + posterOffset}px, 0, ${-depthStep * magnitude}px)`;
+      }
+      const opacityValue = String(opacity);
+      if (card.style.opacity !== opacityValue) card.style.opacity = opacityValue;
+      const ariaHidden = String(i !== centered);
+      if (card.getAttribute('aria-hidden') !== ariaHidden) card.setAttribute('aria-hidden', ariaHidden);
+      const active = i === activeCard;
+      if (card.dataset.active !== String(active)) {
+        card.classList.toggle('is-active', active);
+        card.dataset.active = String(active);
+      }
+    });
     const destination=animation?animation.to:position;previous.disabled=!projects.length||destination<=0;nextButton.disabled=!projects.length||destination>=last;
-    const next=Math.round(position);current.textContent=projects.length?pad(next+1):'00';if(!animation&&!cardPress?.moved&&selected!==next){selected=next;announcement.textContent=projects.length?`${next+1} / ${projects.length}${projects[next].title?`, ${projects[next].title}`:''}`:'등록된 작품이 없습니다.';}
+    const counter = projects.length ? pad(centered + 1) : '00';
+    if (current.textContent !== counter) current.textContent = counter;
+    if(!animation&&!cardPress?.moved&&selected!==centered){selected=centered;announcement.textContent=projects.length?`${centered+1} / ${projects.length}${projects[centered].title?`, ${projects[centered].title}`:''}`:'등록된 작품이 없습니다.';}
     canvas.style.transform=`translateX(${motion.matches?0:-position*9}px)`;
   }
-  function sample(now){if(animation){const t=Math.min(1,(now-animation.start)/animation.duration);position=animation.from+(animation.to-animation.from)*(1-Math.pow(1-t,3));if(t===1)animation=null;}}
-  function tick(now){frame=0;sample(now);render();if(animation)schedule();}
+  function sample(now) {
+    if (animation?.start == null) return;
+    const t = Math.max(0, Math.min(1, (now - animation.start) / animation.duration));
+    position = animation.from + (animation.to - animation.from) * (1 - Math.pow(1 - t, 3));
+    if (t === 1) animation = null;
+  }
+  function tick(now) {
+    frame = 0;
+    // Start on the first available frame so delayed image work cannot skip the opening of the slide.
+    if (animation && animation.start === null) animation.start = now;
+    sample(now);
+    render();
+    if (animation) schedule();
+  }
   function schedule(){if(!frame)frame=requestAnimationFrame(tick);}
-  function snap(target=Math.round(position)){animation={from:position,to:clamp(target),start:performance.now(),duration:motion.matches?0:550};if(motion.matches){position=animation.to;animation=null;}render();schedule();}
+  function snap(target = Math.round(position)) {
+    const destination = clamp(target);
+    if (motion.matches) {
+      position = destination;
+      animation = null;
+      render();
+      return;
+    }
+    animation = { from: position, to: destination, start: null, duration: 550 };
+    schedule();
+  }
   function move(direction){if(!projects.length||window.projectTransitionBusy)return;const base=animation?animation.to:Math.round(position),target=clamp(base+direction);if(target===base)return;sample(performance.now());cardPress=null;scene.classList.remove('dragging');snap(target);}
   previous.addEventListener('click',()=>{resetWheel();move(-1);});nextButton.addEventListener('click',()=>{resetWheel();move(1);});
   window.addEventListener('wheel',e=>{
@@ -37,11 +121,21 @@
   scene.addEventListener('dragstart',e=>e.preventDefault());
   scene.addEventListener('pointerdown',e=>{if(!e.isPrimary||e.button!==0||!projects.length||cardPress||window.projectTransitionBusy)return;resetWheel();e.preventDefault();const index=cards.indexOf(cardAt(e)),clickable=index>=0&&index===activeIndex();cardPress={id:e.pointerId,index,clickable,x:e.clientX,y:e.clientY,lastX:e.clientX,position,moved:false};scene.setPointerCapture(e.pointerId);scene.focus({preventScroll:true});});
   const travel=()=>Math.max(160,Math.min(width*.58,620));
-  scene.addEventListener('pointermove',e=>{if(cardPress?.id!==e.pointerId)return;const press=cardPress;press.lastX=e.clientX;if(!press.moved&&Math.hypot(e.clientX-press.x,e.clientY-press.y)>7){sample(performance.now());press.position=position;animation=null;press.moved=true;scene.classList.add('dragging');}if(press.moved){position=clamp(press.position+(press.x-e.clientX)/travel());render();}});
+  scene.addEventListener('pointermove',e=>{if(cardPress?.id!==e.pointerId)return;const press=cardPress;press.lastX=e.clientX;if(!press.moved&&Math.hypot(e.clientX-press.x,e.clientY-press.y)>7){sample(performance.now());press.position=position;animation=null;press.moved=true;scene.classList.add('dragging');}if(press.moved){position=clamp(press.position+(press.x-e.clientX)/travel());schedule();}});
   function openProject(project){const url=`project.html?id=${encodeURIComponent(project.id)}`;if(window.openProjectPage)window.openProjectPage(url);else location.href=url;}
   function release(e){if(cardPress?.id!==e.pointerId)return;const press=cardPress;cardPress=null;scene.classList.remove('dragging');if(press.moved){snap();return;}if(e.type==='pointerup'&&press.clickable&&Math.hypot(e.clientX-press.x,e.clientY-press.y)<=7&&activeIndex()===press.index&&cardAt(e)===cards[press.index])openProject(projects[press.index]);}
   for(const name of ['pointerup','pointercancel','lostpointercapture'])scene.addEventListener(name,release);
   window.addEventListener('keydown',e=>{if(window.projectTransitionBusy||e.ctrlKey||e.metaKey||e.altKey||e.target?.closest?.('input, textarea, select, [contenteditable="true"]'))return;if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();resetWheel();move(e.key==='ArrowRight'?1:-1);return;}if(e.key==='Enter'&&document.activeElement===scene&&projects.length&&activeIndex()>=0){e.preventDefault();openProject(projects[Math.round(position)]);}});
   function resize(){width=innerWidth;height=innerHeight;if(cardPress?.moved){cardPress.position=position;cardPress.x=cardPress.lastX;}const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*1.1*dpr);canvas.height=Math.round(height*1.1*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);let seed=718;const random=()=>{seed=seed*16807%2147483647;return(seed-1)/2147483646;};for(let i=0;i<Math.floor(width*height/3500);i++){const x=random()*width*1.1,y=random()*height*1.1,radius=.25+random()*.65;ctx.beginPath();ctx.arc(x,y,radius,0,Math.PI*2);random();/* 난수 소비 순서를 유지해 별의 위치와 크기를 보존합니다. */ctx.fillStyle='#F5F5F5';ctx.fill();}schedule();}
-  window.addEventListener('resize',resize);motion.addEventListener('change',()=>{if(animation)snap(animation.to);schedule();});resize();
+  window.addEventListener('resize', () => {
+    resize();
+    measurePosterGap();
+  });
+  if (gatsbyIndex >= 0 && kaguyaIndex === gatsbyIndex + 1) {
+    const posterSizes = new ResizeObserver(() => { measurePosterGap(); schedule(); });
+    posterSizes.observe(cards[gatsbyIndex]);
+    posterSizes.observe(cards[kaguyaIndex]);
+    measurePosterGap();
+  }
+  motion.addEventListener('change',()=>{if(animation)snap(animation.to);schedule();});resize();
 })();

@@ -1,0 +1,122 @@
+#detail.case-detail { width: 100%; }
+.case-detail > .hero {
+  width: min(1280px, 90%);
+  margin-inline: auto;
+}
+.case-detail > .case-study {
+  width: 100%;
+  display: block;
+  padding: 16px max(4.25%, (100% - 1200px) / 2) 32px;
+  background: #f7f7f7;
+  color: #111;
+  color-scheme: light;
+  font-family: Arial, 'Noto Sans KR', sans-serif;
+  font-size: clamp(14px, 1.42vw, 17px);
+  line-height: 1.45;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.case-study :is(p, ul, dl, dd) { margin: 0; }
+.case-study ul { padding: 0; list-style: none; }
+.case-section { padding: 16px 0 24px; }
+.case-section + .case-section { border-top: 1px solid #111; }
+.case-kicker {
+  display: flex;
+  align-items: center;
+  gap: .75em;
+  font-weight: 700;
+}
+.case-kicker strong { font-size: 1.42em; }
+.case-kicker span { display: flex; align-items: center; gap: 1em; }
+.case-kicker span::before {
+  content: '';
+  width: 2.25em;
+  border-top: 1px solid #111;
+}
+.case-section h2 {
+  margin: 0 0 16px;
+  font-size: clamp(23px, 2.9vw, 34px);
+  line-height: 1.18;
+  letter-spacing: -.025em;
+}
+.case-columns { display: grid; align-items: stretch; }
+.case-process { grid-template-columns: minmax(0, 62.5%); }
+.case-design { grid-template-columns: 53% 47%; }
+.case-split {
+  border-left: 1px solid #111;
+  padding-left: clamp(16px, 3.2vw, 38px);
+}
+.case-sketches {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding-inline-end: 12%;
+  gap: 7%;
+}
+.case-media {
+  aspect-ratio: 127 / 188;
+  border: 1px solid #111;
+}
+.case-media.has-artwork { border-color: transparent; }
+.case-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.case-cover { align-self: start; padding-inline-end: 13.5%; }
+.case-cover .case-media { aspect-ratio: 3178 / 2231; }
+.case-study[data-project-id="project-4"] .case-cover .case-media {
+  /* 기준 북커버 높이에 20%를 더하고 포스터의 원본 비율로 너비를 환산합니다. */
+  width: calc(100% * 2231 / 3178 * 1.2 * 4961 / 7016);
+}
+.case-study[data-project-id="project-5"] .case-cover .case-media {
+  /* 정사각형 로고의 한 변을 기준 북커버 높이와 맞춥니다. */
+  width: calc(100% * 2231 / 3178);
+}
+.case-design .case-split { padding-left: clamp(16px, 2.25vw, 32px); }
+.case-study .case-notes {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 16px;
+}
+.case-notes dt { font-weight: 700; }
+.case-notes dd { font-size: .92em; }
+.case-specs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 24px;
+  border-top: 1px solid #111;
+  padding-top: 16px;
+  font-size: .8em;
+}
+.case-study .case-colors { display: flex; flex-wrap: wrap; gap: 8px; }
+.case-colors li { display: flex; align-items: center; gap: 4px; }
+.case-colors span {
+  width: 1.35em;
+  height: 1.35em;
+  border: 1px solid #111;
+  border-radius: 50%;
+}
+.case-colors .case-gradient-swatch {
+  background-repeat: no-repeat;
+  background-position: left top;
+  background-size: 5000% 100%;
+}
+.case-font { padding-left: 10px; border-left: 1px solid #111; }
+.case-font strong { margin-right: .5em; }
+.case-colors .case-gradient span { flex: none; }
+
+@media (max-width: 760px) {
+  .case-detail > .hero { width: 88%; }
+  .case-detail > .case-study { padding-inline: 6%; }
+  .case-columns { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .case-columns .case-split {
+    border-left: 0;
+    border-top: 1px solid #111;
+    padding: 16px 0 0;
+  }
+  .case-sketches, .case-cover { padding-inline-end: 0; }
+}

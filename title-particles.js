@@ -11,6 +11,7 @@
   if (!context || !ink) return;
   cover.append(canvas);
   let simulation = null, frame = 0, buildFrame = 0, lastTime = 0, clock = 0;
+  let needsBuild = true;
   let color = '#F5F5F5', dotRadius = .7, influence = 32, bounds, dpr = 1;
   const pointer = { active: false, x: 0, y: 0 };
   let touchPointerId = null;
@@ -19,10 +20,12 @@
   function draw() {
     context.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
     context.fillStyle = color;
+    const scrollTop = cover.scrollTop;
     context.beginPath();
     for (const p of simulation.points) {
-      context.moveTo(p.x + dotRadius, p.y);
-      context.arc(p.x, p.y, dotRadius, 0, Math.PI * 2);
+      const y = p.y - scrollTop;
+      context.moveTo(p.x + dotRadius, y);
+      context.arc(p.x, y, dotRadius, 0, Math.PI * 2);
     }
     context.fill();
   }
@@ -45,10 +48,13 @@
   function build() {
     buildFrame = 0;
     if (cover.hidden) return;
+    needsBuild = false;
     title.classList.remove('particles-ready');
     const glyphs = [...title.querySelectorAll('.title-ink')];
     if (!glyphs.length) return;
-    bounds = title.getBoundingClientRect();
+    const titleRect = title.getBoundingClientRect();
+    const scrollTop = cover.scrollTop;
+    bounds = { left: titleRect.left, top: titleRect.top + scrollTop, width: titleRect.width, height: titleRect.height };
     dpr = Math.min(devicePixelRatio || 1, 2);
     canvas.width = Math.round(innerWidth * dpr); canvas.height = Math.round(innerHeight * dpr);
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -68,7 +74,7 @@
       const style = getComputedStyle(glyph), rect = glyph.getBoundingClientRect();
       ink.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
       ink.fontKerning = 'none';
-      ink.fillText(glyph.textContent, rect.left, baseline.getBoundingClientRect().top - top);
+      ink.fillText(glyph.textContent, rect.left, baseline.getBoundingClientRect().top + scrollTop - top);
     }
     const pixels = ink.getImageData(0, 0, mask.width, mask.height).data;
     const target = innerWidth <= 600 ? 11000 : 16000;
@@ -86,12 +92,15 @@
     canvas.dataset.particleCount = String(count); canvas.hidden = false;
     title.classList.add('particles-ready'); draw(); schedule();
   }
-  function queueBuild() { cancelAnimationFrame(buildFrame); buildFrame = requestAnimationFrame(build); }
+  function queueBuild() {
+    needsBuild = true;
+    if (!cover.hidden && !buildFrame) buildFrame = requestAnimationFrame(build);
+  }
   function trackPointer(event) {
-    bounds = title.getBoundingClientRect();
-    const active = event.clientX >= bounds.left && event.clientX <= bounds.right && event.clientY >= bounds.top && event.clientY <= bounds.bottom;
+    const rect = title.getBoundingClientRect();
+    const active = event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
     if (pointer.active && !active) resumeIdleAt = performance.now() + 2600;
-    pointer.active = active; pointer.x = event.clientX; pointer.y = event.clientY;
+    pointer.active = active; pointer.x = event.clientX; pointer.y = event.clientY + cover.scrollTop;
     schedule();
   }
   window.addEventListener('pointermove', event => {
@@ -111,7 +120,7 @@
       title.setPointerCapture(event.pointerId);
       trackPointer(event);
     }
-    simulation.burst(event.clientX, event.clientY); resumeIdleAt = performance.now() + 2600; schedule();
+    simulation.burst(event.clientX, event.clientY + cover.scrollTop); resumeIdleAt = performance.now() + 2600; schedule();
   });
   function endTouch(event) {
     if (event.pointerId !== touchPointerId) return;
@@ -122,10 +131,14 @@
   title.addEventListener('lostpointercapture', endTouch);
   document.addEventListener('portfolio:title-layout', queueBuild);
   window.addEventListener('resize', queueBuild);
-  cover.addEventListener('scroll', queueBuild, { passive: true });
+  cover.addEventListener('scroll', schedule, { passive: true });
   document.addEventListener('visibilitychange', schedule);
   document.addEventListener('portfolio:modalchange', schedule);
-  new MutationObserver(() => { if (visible()) queueBuild(); }).observe(cover, { attributes: true, attributeFilter: ['hidden', 'class'] });
+  new MutationObserver(() => {
+    if (!visible()) return;
+    if (needsBuild) queueBuild();
+    else schedule();
+  }).observe(cover, { attributes: true, attributeFilter: ['hidden', 'class'] });
   reduced.addEventListener('change', queueBuild);
   document.fonts.ready.then(queueBuild);
 })();
