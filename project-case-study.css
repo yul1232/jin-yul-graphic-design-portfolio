@@ -58,6 +58,30 @@
   border: 1px solid #111;
 }
 .case-media.has-artwork { border-color: transparent; }
+.case-sketches .case-media {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+.case-study[data-project-id="project-5"] .case-sketches .case-media {
+  aspect-ratio: 1;
+}
+.case-sketches .case-media.has-artwork {
+  border-color: #111;
+  background: #fff;
+}
+.case-sketches .case-media img {
+  position: absolute;
+  inset: 0;
+}
+.case-study[data-project-id="project-2"] .case-sketches .case-media:is(:first-child, :last-child) {
+  overflow: hidden;
+}
+.case-study[data-project-id="project-2"] .case-sketches .case-media:is(:first-child, :last-child) img {
+  inset: -1.5px auto auto -1.5px;
+  width: calc(100% + 3px);
+  height: calc(100% + 3px);
+}
 .case-media img {
   display: block;
   width: 100%;

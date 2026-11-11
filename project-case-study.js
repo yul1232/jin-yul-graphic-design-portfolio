@@ -10,7 +10,11 @@
       colors: ['#1E63B0', '#D9DDE3', '#F4F5F6'],
       typeface: 'OG 르네상스 비밀',
       // 준비된 이미지의 상대 경로를 해당 칸에 입력합니다.
-      sketches: ['', '', ''],
+      sketches: [
+        'assets/snowman-sketch-1.png',
+        'assets/snowman-sketch-2.png',
+        'assets/snowman-sketch-3.png',
+      ],
     },
     'project-2': {
       designNotes: [
@@ -24,7 +28,11 @@
       coverRatio: '3308 / 2658',
       typeface: '강원교육튼튼체',
       // 준비된 스케치 이미지의 상대 경로를 왼쪽부터 입력합니다.
-      sketches: ['', '', ''],
+      sketches: [
+        'assets/catcher-sketch-1.png',
+        'assets/catcher-sketch-2.png',
+        'assets/catcher-sketch-3.png',
+      ],
     },
     'project-3': {
       designNotes: [
@@ -40,7 +48,11 @@
       ],
       coverRatio: '3661 / 2480',
       typeface: '스텔라체 OTF Bold Condensed',
-      sketches: ['', '', ''],
+      sketches: [
+        'assets/gatsby-sketch-1.png',
+        'assets/gatsby-sketch-2.png',
+        'assets/gatsby-sketch-3.png',
+      ],
     },
     'project-4': {
       designNotes: [
@@ -53,7 +65,7 @@
       backgroundGradient: ['#E1E7AA', '#D4A17B', '#D05E57'],
       coverRatio: '4961 / 7016',
       typeface: '스스로넷 NotCliche OTF',
-      sketches: ['', '', ''],
+      sketches: ['assets/kaguya-sketch-1.png'],
     },
     'project-5': {
       designNotes: [
@@ -64,7 +76,11 @@
       colors: ['#215367'],
       coverRatio: '1 / 1',
       typeface: 'Fraunces',
-      sketches: ['', '', ''],
+      sketches: [
+        'assets/seorin-sketch-1.png',
+        'assets/seorin-sketch-2.png',
+        'assets/seorin-sketch-3.png',
+      ],
     },
   };
 
