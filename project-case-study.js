@@ -153,6 +153,12 @@
       const image = new Image();
       image.alt = slot.getAttribute('aria-label');
       image.decoding = 'async';
+      if (slot.closest('.case-sketches')) {
+        // assets 폴더 대신 저장소 최상위에 업로드한 스케치도 표시합니다.
+        image.addEventListener('error', () => {
+          image.src = slot.dataset.source.replace(/^assets\//, '');
+        }, { once: true });
+      }
       image.addEventListener('load', () => {
         slot.replaceChildren(image);
         slot.removeAttribute('role');
